@@ -1,104 +1,230 @@
-# Quick Start Guide
+# Quick Start Guide - Millix Explorer v1.3
 
-## Launch the Application
+Get up and running with the Millix DAG Explorer in under 2 minutes!
 
-### Method 1: Using the Launch Script (Recommended)
+## 🚀 Launch the Application
+
+### Method 1: Unified Server (Recommended)
+
 ```bash
-./launch.sh
+cd /home/zen/Documents/Octo-PROg/MLXExplorer/MLXExplorer-v1.3/proxy
+node unified-server.js
 ```
 
-Then open your browser to: **http://localhost:8000**
+Then open: **http://localhost:8080**
 
-### Method 2: Direct Browser Access
-Simply open `index.html` in your web browser by double-clicking it or dragging it into your browser window.
+### Method 2: Background Mode
 
-### Method 3: Manual Server Start
 ```bash
-# Python 3
-python3 -m http.server 8000
-
-# Or Node.js
-npx http-server -p 8000
-
-# Or PHP
-php -S localhost:8000
+cd /home/zen/Documents/Octo-PROg/MLXExplorer/MLXExplorer-v1.3/proxy
+nohup node unified-server.js > server.log 2>&1 &
 ```
 
-Then visit: **http://localhost:8000**
+### Stop the Server
 
-## Using the Explorer
+```bash
+pkill -f unified-server.js
+```
 
-### 1. View the DAG Visualization
-- The center panel shows the interactive DAG network
-- **Green nodes** = Confirmed transactions
-- **Yellow nodes** = Pending transactions  
-- **Blue nodes** = Hibernating transactions (>10 min old)
+## 🎯 Using the Explorer
 
-### 2. Interact with the Graph
+### 1. Choose Your View Mode
+
+Click the stat cards at the top to switch between modes:
+
+- **Peers** 🌐: View your network peer connections
+- **Node Txns** 📊: Your wallet's transaction DAG
+- **Network Txns** 🌍: Full network transaction visualization
+- **MLX Price** 💰: Live price chart with history
+
+### 2. Peer Network (Default View)
+
+**Toggle Between Views:**
+- Click **2D/MAP** button to switch between:
+  - **Hub View**: Your node at center with radial connections
+  - **World Map**: Geographic peer locations on a world map
+
+**Interact:**
+- **Click** any peer to view details (IP, port, location, status)
+- **Hover** over peers on map to see country/city
+- **Zoom/Pan** to explore the map
+
+### 3. Transaction DAG Views
+
+**Visual Elements:**
+- 🟢 **Green nodes** = Confirmed transactions
+- 🟣 **Purple nodes** = Pending transactions  
+- 🔵 **Blue nodes** = Hibernating transactions
+
+**Controls:**
 - **Click** nodes to view transaction details
-- **Drag** nodes to reposition them
+- **Drag** nodes to reposition
 - **Scroll** to zoom in/out
-- **Click + drag background** to pan
+- **Drag background** to pan
 
-### 3. Use the Controls
-- **+ / -** buttons: Zoom in/out
+### 4. Price Chart
+
+- Live MLX/USD price from fiatleak.com
+- Historical data with interactive graph
+- 24-hour change percentage
+- Updates every 30 seconds
+
+### 5. Interactive Controls
+
+Top-right buttons:
+- **+ / -**: Zoom in/out
 - **Reset**: Return to default view
-- **Labels**: Toggle transaction ID labels
-- **2D/3D**: Switch visualization modes (3D coming soon!)
+- **Labels**: Toggle node ID labels
+- **2D/MAP**: Switch peer visualization modes
+- **LIVE/DEMO**: Toggle between real and demo data
 
-### 4. Search Transactions
-1. Enter a transaction ID or wallet address in the search box
-2. Click "Search" or press Enter
-3. View results in the details panel on the right
+### 6. Search & Explore
 
-### 5. Monitor Live Feed
-- Watch the left sidebar for real-time transactions
-- Click any transaction to view full details
-- Transactions automatically update every 5 seconds
+**Left Sidebar:**
+1. **Search Box**: Enter transaction ID or address
+2. **Filters**: 
+   - Show Recent (10 min) - enabled by default
+   - Show Hibernating - enabled by default
+   - Time Range selector
+3. **Live Feed**: Real-time transaction updates
 
-### 6. Check Network Stats
-- Top right shows:
-  - Total network nodes
-  - 24-hour transaction count
-  - Current MLX price in BTC
+**Right Panel:**
+- Click any transaction/peer to see detailed information
+- Shows: ID, amount, addresses, timestamps, state, location
 
-## Demo Mode
+## 🎭 Demo Mode
 
-By default, the application runs in **demo mode** with synthetic data. This allows you to explore all features without connecting to a real Millix node.
+**Switch to Demo Mode** (no Millix node required):
 
-To connect to a real Millix node, edit `js/config.js`:
-```javascript
-DEMO_MODE: false,
-API_BASE_URL: 'https://your-millix-node-api.com'
+1. Click the **LIVE** button (top right)
+2. It switches to **DEMO** mode
+3. Demo features:
+   - 60 synthetic peers from major cities worldwide
+   - Real geolocation data
+   - Simulated transactions
+   - Mock network statistics
+
+**Switch back to LIVE** mode:
+- Click the **DEMO** button
+- Requires local Millix node running
+
+## 💡 Tips & Tricks
+
+### Performance
+- **Best Browsers**: Chrome 90+, Firefox 88+ for optimal D3.js rendering
+- **Mobile**: Fully responsive on tablets and phones
+- **Multiple Views**: Open multiple tabs to monitor different aspects
+
+### Keyboard Shortcuts
+- **F12**: Open developer console for detailed logs
+- **Ctrl +/-**: Browser zoom (separate from graph zoom)
+- **Ctrl+Shift+R**: Hard refresh to clear cache
+
+### Advanced Features
+- **Geolocation**: Peers automatically geolocated via IP address
+- **Auto-updates**: All data refreshes every 20 seconds
+- **Smart Fallback**: Missing transaction data handled gracefully
+- **Caching**: Geolocation results cached for performance
+
+## 🐛 Troubleshooting
+
+### Server Won't Start
+
+**Problem**: Port 8080 already in use
+```bash
+# Find what's using the port
+lsof -i :8080
+# Kill it or use a different port
 ```
 
-## Tips
+**Problem**: Millix node not found
+```bash
+# Check if node is running
+ps aux | grep millix-node
+# Check credentials exist
+ls -la ~/millix-tangled/node.json
+```
 
-- **Best Performance**: Use Chrome or Firefox for optimal D3.js rendering
-- **Mobile**: Works on tablets and phones, with responsive layout
-- **Multiple Windows**: Open multiple browser tabs to view different parts of the network
-- **Developer Tools**: Open browser console (F12) to see detailed logs
+### No Data Showing
 
-## Troubleshooting
+**Solution 1**: Switch to demo mode (click LIVE → DEMO)
 
-**Problem**: White/blank screen  
-**Solution**: Check browser console for errors. Ensure D3.js CDN is accessible.
+**Solution 2**: Check server logs
+```bash
+tail -f /home/zen/Documents/Octo-PROg/MLXExplorer/MLXExplorer-v1.3/proxy/server.log
+```
 
-**Problem**: No data showing  
-**Solution**: In demo mode, data generates automatically. Check `config.js` settings.
+### World Map Not Loading
 
-**Problem**: Visualization is slow  
-**Solution**: Reduce `MAX_NODES` in `config.js` or close other browser tabs.
+**Problem**: TopoJSON/D3.js not loading
+- Check internet connection (loads from CDN)
+- Check browser console (F12) for errors
+- Try hard refresh (Ctrl+Shift+R)
 
-**Problem**: Can't start server  
-**Solution**: Check if port 8000 is already in use, try a different port.
+**Problem**: Peers not showing on map
+- Geolocation requires internet access
+- Some IPs may be private/local (can't geolocate)
+- Check rate limits (45 requests/min for IP-API)
 
-## What's Next?
+### Price Chart Empty
 
-Explore the full README.md for:
-- Detailed feature documentation
-- Configuration options
-- API integration guide
-- Architecture overview
+**Solution**: Wait 30-60 seconds for initial data collection
+- Price updates every 30 seconds
+- Requires internet access to fiatleak.com
+- Check browser console for fetch errors
 
-Enjoy exploring the Millix DAG! 🚀
+### Visualization is Slow
+
+**Solutions**:
+- Reduce MAX_NODES in `js/config.js`
+- Close other browser tabs
+- Use Chrome/Firefox for better performance
+- Disable browser extensions temporarily
+
+## 📚 What's Next?
+
+Explore the complete documentation:
+
+- **README.md**: Full feature list and technical details
+- **LIVE_DATA_STATUS.md**: Current data sources and status
+- **proxy/README.md**: Server configuration and API
+
+## 🎨 Customization
+
+### Change Colors
+
+Edit `js/config.js`:
+```javascript
+COLORS: {
+    CONFIRMED: '#10b981',    // Green
+    PENDING: '#c084fc',      // Purple
+    HIBERNATING: '#60a5fa',  // Blue
+    LINK: '#8b5cf6'         // Purple links
+}
+```
+
+### Adjust Update Intervals
+
+Edit `js/config.js`:
+```javascript
+STATS_UPDATE_INTERVAL: 20000,        // 20 seconds
+TRANSACTION_UPDATE_INTERVAL: 20000,  // 20 seconds
+VISUALIZATION_UPDATE_INTERVAL: 20000 // 20 seconds
+```
+
+### Configure Node Connection
+
+Edit `proxy/unified-server.js`:
+```javascript
+const CONFIG = {
+    SERVER_PORT: 8080,
+    MILLIX_HOST: 'localhost',
+    MILLIX_PORT: 5500
+};
+```
+
+---
+
+**Enjoy exploring the Millix network! 🚀💜**
+
+For issues or questions, check the full README.md or open an issue on GitHub.
